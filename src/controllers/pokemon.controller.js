@@ -44,11 +44,8 @@ export async function createPokemon(req, res) {
   try {
     const response = await P.getPokemonsList({ limit: 100 });
     const pokemonData = response.results;
-
     await savePokemonData(pokemonData);
-
-    const pokemons = await Pokemon.findAll();
-    res.json(pokemons);
+    res.status(201).json({ message: "Pokémon data saved successfully" });
   } catch (error) {
     console.error("Error fetching Pokemon data:", error);
     res.status(500).json({
@@ -57,3 +54,12 @@ export async function createPokemon(req, res) {
     });
   }
 }
+
+export const getPokemon = async (req, res) => {
+  try {
+    const pokemon = await Pokemon.findAll();
+    res.json(pokemon);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve pokemon" });
+  }
+};
