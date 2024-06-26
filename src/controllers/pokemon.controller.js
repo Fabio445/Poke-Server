@@ -1,5 +1,6 @@
 import Pokedex from "pokedex-promise-v2";
 import Pokemon from "../models/Pokemon.js";
+import sequelize from "../config/db.js";
 
 const P = new Pokedex({
   protocol: "https",
@@ -61,5 +62,18 @@ export const getPokemon = async (req, res) => {
     res.json(pokemon);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve pokemon" });
+  }
+};
+
+export const getRandomPokemon = async (req, res) => {
+  try {
+    const randomPokemons = await Pokemon.findAll({
+      order: sequelize.random(),
+      limit: 10,
+    });
+    res.json(randomPokemons);
+  } catch (error) {
+    console.error("Failed to retrieve random Pokémon:", error);
+    res.status(500).json({ error: "Failed to retrieve random Pokémon" });
   }
 };
