@@ -69,7 +69,7 @@ export const getRandomPokemon = async (req, res) => {
   try {
     const randomPokemons = await Pokemon.findAll({
       order: sequelize.random(),
-      limit: 10,
+      limit: 18,
     });
     res.json(randomPokemons);
   } catch (error) {
