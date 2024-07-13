@@ -14,24 +14,51 @@ async function getPokemonDetails(name) {
   try {
     const pokemon = await P.getPokemonByName(name);
     const types = pokemon.types.map((type) => type.type.name).join(", ");
-    const image = pokemon.sprites.front_default;
-    return { type: types, image };
+    const abilities = pokemon.abilities
+      .map((ability) => ability.ability.name)
+      .join(", ");
+    const stats = pokemon.stats
+      .map((stat) => `${stat.stat.name}: ${stat.base_stat}`)
+      .join(", ");
+    const weight = pokemon.weight;
+    const height = pokemon.height;
+    const image = pokemon.sprites.front_default || "";
+    return {
+      name: pokemon.name,
+      type: types,
+      abilities: abilities,
+      stats: stats,
+      weight: weight,
+      height: height,
+      image: image,
+    };
   } catch (error) {
     console.error(`Error fetching details for ${name}:`, error);
-    return { type: "unknown", image: "" };
+    return {
+      name: name,
+      type: "unknown",
+      abilities: "unknown",
+      stats: "unknown",
+      weight: 0,
+      height: 0,
+      image: "",
+    };
   }
 }
 
 export async function savePokemonData(pokemonData) {
   try {
     for (const pokemon of pokemonData) {
-      const { type, image } = await getPokemonDetails(pokemon.name);
+      const details = await getPokemonDetails(pokemon.name);
       await Pokemon.findOrCreate({
-        where: { name: pokemon.name },
+        where: { name: details.name },
         defaults: {
-          type: type || "unknown",
-          description: "",
-          image: image || "",
+          type: details.type || "unknown",
+          abilities: details.abilities || "unknown",
+          stats: details.stats || "unknown",
+          weight: details.weight || 0,
+          height: details.height || 0,
+          image: details.image || "",
         },
       });
     }
@@ -43,7 +70,7 @@ export async function savePokemonData(pokemonData) {
 
 export async function createPokemon(req, res) {
   try {
-    const response = await P.getPokemonsList({ limit: 100 });
+    const response = await P.getPokemonsList({ nolimit: true });
     const pokemonData = response.results;
     await savePokemonData(pokemonData);
     res.status(201).json({ message: "Pokémon data saved successfully" });

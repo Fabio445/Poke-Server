@@ -11,11 +11,25 @@ const Pokemon = sequelize.define("Pokemon", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  description: {
+  abilities: {
     type: DataTypes.STRING,
+    allowNull: true,
+  },
+  stats: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  height: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  weight: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
   },
   image: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
 });
 
