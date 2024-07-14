@@ -94,9 +94,21 @@ export const getPokemon = async (req, res) => {
 
 export const getRandomPokemon = async (req, res) => {
   try {
+    const randomPokemon = await Pokemon.findOne({
+      order: sequelize.random(),
+    });
+    res.json(randomPokemon);
+  } catch (error) {
+    console.error("Failed to retrieve random Pokémon:", error);
+    res.status(500).json({ error: "Failed to retrieve random Pokémon" });
+  }
+};
+
+export const getRandomPokemons = async (req, res) => {
+  try {
     const randomPokemons = await Pokemon.findAll({
       order: sequelize.random(),
-      limit: 18,
+      limit: 24,
     });
     res.json(randomPokemons);
   } catch (error) {
