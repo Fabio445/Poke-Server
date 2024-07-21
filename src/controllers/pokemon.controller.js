@@ -92,6 +92,21 @@ export const getPokemon = async (req, res) => {
   }
 };
 
+export const getPokemonById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pokemon = await Pokemon.findByPk(id);
+    if (pokemon) {
+      res.json(pokemon);
+    } else {
+      res.status(404).json({ error: "Pokemon not found" });
+    }
+  } catch (error) {
+    console.error("Failed to retrieve Pokemon:", error);
+    res.status(500).json({ error: "Failed to retrieve Pokemon" });
+  }
+};
+
 export const getRandomPokemon = async (req, res) => {
   try {
     const randomPokemon = await Pokemon.findOne({
