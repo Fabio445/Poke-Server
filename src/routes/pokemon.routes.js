@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get("/create", createPokemon);
 router.get("/", getPokemon);
-router.get("/:id", getPokemonById);
 router.get("/random", getRandomPokemon);
 router.get("/randoms", getRandomPokemons);
+router.get("/:id", getPokemonById);
 export default router;
